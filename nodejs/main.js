@@ -12,11 +12,10 @@ var app = http.createServer(function(request,response){
 
     if(pathName === '/'){
         fs.readFile(`data/${title}`, 'utf8', (err, description) => {
-        if(title === undefined){
-            title = "Welcome";
-            description = "Hello, Node.js"
-        }
-
+            if(title === undefined){
+                title = "Welcome";
+                description = "Hello, Node.js"
+            }
             var template = `
             <!doctype html>
             <html>
