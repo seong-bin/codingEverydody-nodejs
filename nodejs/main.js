@@ -6,65 +6,38 @@ var app = http.createServer(function(request,response){
     var _url = request.url;
     var queryData = url.parse(_url, true).query;    // 객채가 담김
     var pathName = url.parse(_url, true).pathname;
+    // var queryData = new URL('http://localhost:3000' + _url).searchParams;    nodejs v16부터 이 방식으로 변경 됨
+    // console.log(queryData.get('id'));
     var title = queryData.id;
 
     if(pathName === '/'){
-        if(title === undefined){
-            fs.readdir('./data', function(err, fileList){
+        fs.readFile(`data/${title}`, 'utf8', (err, description) => {
+            if(title === undefined){
                 title = "Welcome";
                 description = "Hello, Node.js"
-                var list = `<ul>`;
-                for(var i in fileList){
-                    list += `<li><a href="/?id=${fileList[i]}">${fileList[i]}</a></li>`;
-                }
-                list += `</ul>`;
-                var template = `
-                    <!doctype html>
-                    <html>
-                    <head>
-                      <title>WEB1 - ${title}</title>
-                      <meta charset="utf-8">
-                    </head>
-                    <body>
-                      <h1><a href="/">WEB</a></h1>
-                      ${list}
-                      <h2>${title}</h2>
-                      <p>${description}</p>
-                    </body>
-                    </html>
-                    `;
-                response.writeHead(200);
-                response.end(template);
-            });
-
-        }else{
-            fs.readdir('./data', function(err, fileList){
-                var list = `<ul>`;
-                for(var i in fileList){
-                    list += `<li><a href="/?id=${fileList[i]}">${fileList[i]}</a></li>`;
-                }
-                list += `</ul>`;
-                fs.readFile(`data/${title}`, 'utf8', (err, description) => {
-                    var template = `
-                    <!doctype html>
-                    <html>
-                    <head>
-                      <title>WEB1 - ${title}</title>
-                      <meta charset="utf-8">
-                    </head>
-                    <body>
-                      <h1><a href="/">WEB</a></h1>
-                      ${list}
-                      <h2>${title}</h2>
-                      <p>${description}</p>
-                    </body>
-                    </html>
-                    `;
-                    response.writeHead(200);
-                    response.end(template);
-                });
-            });
-        }
+            }
+            var template = `
+            <!doctype html>
+            <html>
+            <head>
+              <title>WEB1 - ${title}</title>
+              <meta charset="utf-8">
+            </head>
+            <body>
+              <h1><a href="/">WEB</a></h1>
+              <ul>
+                <li><a href="/?id=HTML">HTML</a></li>
+                <li><a href="/?id=CSS">CSS</a></li>
+                <li><a href="/?id=JavaScript">JavaScript</a></li>
+              </ul>
+              <h2>${title}</h2>
+              <p>${description}</p>
+            </body>
+            </html>
+            `;
+            response.writeHead(200);
+            response.end(template);
+        });
     } else{
         response.writeHead(404);
         response.end('Not found!');
