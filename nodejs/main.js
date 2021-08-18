@@ -4,7 +4,6 @@ var url = require('url');
 
 var app = http.createServer(function(request,response){
     var _url = request.url;
-    console.log(url.parse(_url, true)); // 주어진 url정보를 분석해서 json형식으로 던짐
     var queryData = url.parse(_url, true).query;    // 객채가 담김
     var pathName = url.parse(_url, true).pathname;
     // var queryData = new URL('http://localhost:3000' + _url).searchParams;    nodejs v16부터 이 방식으로 변경 됨
@@ -13,6 +12,11 @@ var app = http.createServer(function(request,response){
 
     if(pathName === '/'){
         fs.readFile(`data/${title}`, 'utf8', (err, description) => {
+        if(title === undefined){
+            title = "Welcome";
+            description = "Hello, Node.js"
+        }
+
             var template = `
             <!doctype html>
             <html>
